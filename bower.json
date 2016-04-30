@@ -1,0 +1,31 @@
+{
+  "name": "quickweb",
+  "description": "Quick web grid layout creation service",
+  "main": "index.php",
+  "authors": [
+    "Jan Cerveny",
+    "Adi Ionut"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "quick",
+    "web",
+    "grid",
+    "bootstrap"
+  ],
+  "homepage": "http://www.avisioned.com",
+  "moduleType": [
+    "node"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "summernote": "^0.8.1"
+  }
+}
