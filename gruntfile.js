@@ -59,8 +59,7 @@ module.exports = function(grunt) {
             'node_modules/lodash/index.js',
             'dev/tmp/jquery-ui.js', 
             'node_modules/gridstack/dist/gridstack.js', 
-            'node_modules/bootstrap-colorpicker/src/js/colorpicker-color.js',
-            'node_modules/bootstrap-colorpicker/src/js/colorpicker.js',
+            'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
             'bower_components/summernote/dist/summernote.js', 
             'dev/js/editor.js'
           ]
