@@ -9,11 +9,30 @@
   if(isset($_GET['fbid']))
   {
     $fbid = sanitize($_GET['fbid']);
-    $sql = 'select * from users where facebook_id="' . $fbid . '"';
+    $sql = 'select id, name from users where facebook_id="' . $fbid . '"';
     $db = new Database();
-    $user = $db->query($sql)->fetch_object();
-    print_r($user);
-    die();
+    if($user = $db->query($sql)->fetch_object())
+    {
+      // if a User exists already, log them in
+//      print_r($user);
+//      die();
+      $_SESSION['user'] = $user;
+    } else {
+      // create a user which does not exist.
+      // todo: secure this!
+      $sql = 'insert into users (facebook_id, name, email, created) values ("' . $fbid . '", "' . urldecode($_GET['name']) . '", "' . urldecode($_GET['email']) . '", "'. date('Y-m-d H:i:s').'")';
+      if($db->query($sql))
+      {
+        // Now the user has been created, so we can fetch him as an object and proceed.
+        $sql = 'select id, name from users where facebook_id="' . $fbid . '"';
+        $user = $db->query($sql)->fetch_object();
+        $_SESSION['user'] = $user;
+      } else {
+        die('Could not create a new user!');
+      }
+    }
+    // redirect tt the next step.
+    header('Location: pagemeta.php');
   }
 ?>
 <!doctype html>
