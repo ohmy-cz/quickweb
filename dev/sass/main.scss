@@ -160,7 +160,7 @@ body .grid-stack .grid-stack-item .ui-resizable-handle {
   right:15px;
 }
 .avi-itemBtnHighlight {
-  right:99px;
+  right:120px;
   background-color:$brand-primary;
   text-align:center;
   &:hover {
@@ -169,6 +169,9 @@ body .grid-stack .grid-stack-item .ui-resizable-handle {
   &>* {
     color:contrast-color($brand-primary);
   }
+}
+.avi-removeItem {
+  right:99px;
 }
 .avi-dragHandle {
   right:36px;

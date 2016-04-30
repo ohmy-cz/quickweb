@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         options: {
           sourceMap: true,
           compress: {
-            drop_console: true
+            //drop_console: true
           }
         },
         files: {
@@ -62,10 +62,8 @@ module.exports = function(grunt) {
             'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
             'bower_components/summernote/dist/summernote.js', 
             'dev/js/editor.js'
-          ]
-/*          'js/common.js': [
-            'node_modules/bootstrap-sass/assets/javascripts/bootstrap.js'
-          ]*/
+          ],
+          'js/login.js': 'dev/js/login.js'
         }
       }
     },

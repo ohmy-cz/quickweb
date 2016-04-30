@@ -99,6 +99,17 @@ $(function () {
         console.log(b64);
       }
     })
+    .on('click', '.avi-removeItem', function(e){
+      e.preventDefault();
+      if(confirm('Are you sure you want to remove this widget?'))
+      {
+        var container = $(this).closest('.grid-stack-item');
+        if(container.length > 0)
+        {
+          container.fadeOut('slow');
+        }
+      }
+    })
     .on('click', '.avi-toggleEdit', function(e){
       e.preventDefault();
       var container = $(this).closest('.grid-stack-item').find('.grid-stack-item-content');
@@ -183,6 +194,57 @@ $(function () {
             //guidesGrid[i].dom.addClass('hit');
 //            alert('Do you want to add a new widget here?');
           }
+        }
+      }
+    })
+    .on('click', '#avicreatepage', function(e){
+      e.preventDefault();
+      var owner = $(this);
+      if(!owner.hasClass('disabled'))
+      {
+        if($('.grid-stack-item:visible').length > 0)
+        {
+          var grid = $('.grid-stack').data('gridstack');
+          
+          var items = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
+              el = $(el);
+              var node = el.data('_gridstack_node');
+              return {
+                  //id: el.attr('data-custom-id'),
+                  x: node.x,
+                  y: node.y,
+                  width: node.width,
+                  height: node.height,
+                  content: encodeURIComponent(el.html())
+              };
+          });
+          
+          console.log(items);
+          owner.addClass('disabled').prop('disabled', true);
+          $.ajax({
+            url: 'createpage.php',
+            cache: false,
+            type: 'POST',
+            dataType: 'json',
+            contentType:"application/json; encoding=utf8",
+            data: JSON.stringify({layout: items}),
+            success: function(r) {
+              if(parseInt(r.status) > 0)
+              {
+                window.location = 'login.php';
+              } else {
+                alert(r.error);
+              }
+            },
+            error: function(a,b,c) {
+              console.error(a,b,c);
+            },
+            complete: function() {
+              owner.removeClass('disabled').removeAttr('disabled');
+            }
+          });
+        } else {
+          alert('Cannot save an empty page! Please add at least one widget.');
         }
       }
     })
@@ -289,7 +351,10 @@ $(function () {
       })
       .on('click', '.avi-add-new-widget', function(e){
         e.preventDefault();
-        var grid = $('.grid-stack').data('gridstack')
+        // enable the Create button
+        $('#btnAddText').toggleClass('btn-primary btn-default');
+        $('#avicreatepage').prop('disabled', false).removeClass('disabled btn-default').addClass('btn-primary');
+        var grid = $('.grid-stack').data('gridstack');
   
         var items = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
             el = $(el);

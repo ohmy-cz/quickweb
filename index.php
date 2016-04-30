@@ -710,7 +710,7 @@
   </div>
   <div class="avi-panel left">
     <div class="avi-panel-content">
-      <a class="btn btn-primary btn-lg btn-block avi-add-new-widget" data-type="text" href="#"><i class="fa fa-pencil"></i> Add Text</a>
+      <a class="btn btn-primary btn-lg btn-block avi-add-new-widget" id="btnAddText" data-type="text" href="#"><i class="fa fa-pencil"></i> Add Text</a>
       <a class="btn btn-default btn-lg btn-block avi-add-new-widget" data-type="picture" href="#"><i class="fa fa-image"></i> Add Picture</a>
 <!--      <a class="btn btn-default btn-block" id="add-new-widget" href="#"><i class="fa fa-plus"></i> Add Video</a>-->
 <!--      <a class="btn btn-default btn-block" id="add-new-widget" href="#"><i class="fa fa-map-pin"></i> Add Map</a>-->
@@ -732,6 +732,8 @@
       <form action="upload.php" method="post" enctype="multipart/form-data" target="uploadpit">
         <input type="file" name="background" class="form-control avi-bodyBg">
       </form>
+      <hr>
+      <button class="btn btn-default btn-block disabled" id="avicreatepage" disabled type="button"><i class="fa fa-chain"></i> Create page</button>
     </div>
   </div>
 <!--<div id="summernote">Hello Summernote</div>-->
