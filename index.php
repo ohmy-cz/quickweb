@@ -1,4 +1,9 @@
-﻿<!doctype html>
+﻿<?php
+  require('config.php');
+  require_once('helpers/string.php');
+  require_once('classes/database.php');
+  $db = new Database();
+?><!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -7,6 +12,25 @@
 </head>
 
 <body>
+  <?php
+    if(isset($_GET['slug']))
+    {
+        $sql = 'select * from sites where slug = "' . sanitize($_GET['slug']) . '" limit 1';
+        $r = $db->query($sql);
+        if($site = $r->fetch_object())
+        {
+          print_r($site);
+          $sql = 'select * from site_elements where site = ' . intval($site->id);
+          $r1 = $db->query($sql);
+          while($site_element = $r1->fetch_object())
+          {
+            print_r($site_element);
+          }
+        } else {
+          die('Requested page has not been found!');
+        }
+    }
+  ?>
   <!--
     <div class="device-xs visible-xs"></div>
     <div class="device-sm visible-sm"></div>
@@ -710,27 +734,37 @@
   </div>
   <div class="avi-panel left">
     <div class="avi-panel-content">
-      <a class="btn btn-primary btn-lg btn-block avi-add-new-widget" id="btnAddText" data-type="text" href="#"><i class="fa fa-pencil"></i> Add Text</a>
-      <a class="btn btn-default btn-lg btn-block avi-add-new-widget" data-type="picture" href="#"><i class="fa fa-image"></i> Add Picture</a>
-<!--      <a class="btn btn-default btn-block" id="add-new-widget" href="#"><i class="fa fa-plus"></i> Add Video</a>-->
-<!--      <a class="btn btn-default btn-block" id="add-new-widget" href="#"><i class="fa fa-map-pin"></i> Add Map</a>-->
-      <a class="btn btn-default btn-block avi-add-new-widget" data-type="contact-form" href="#"><i class="fa fa-paper-plane"></i> Add Contact Form</a>
-<!--      <a class="btn btn-default btn-block" id="add-new-widget" href="#"><i class="fa fa-car"></i> Add Celtic Tuning</a> -->
-      <a class="btn btn-default btn-block avi-add-new-widget" data-type="button" href="#"><i class="fa fa-chain"></i> Add Button</a>
+      <?php
+        $sql = 'select id, name, icon from site_element_types where deleted != 1';
+        $r = $db->query($sql);
+        while($site_element_type = $r->fetch_object())
+        {
+          ?>
+            <a class="btn <?php echo $site_element_type->id == 1 ? ' btn-primary btn-lg' : ' btn-default'; ?> btn-block avi-add-new-widget" id="btnAdd<?php echo ucfirst(sanitize(strtolower($site_element_type->name))); ?>" data-type="<?php echo $site_element_type->id; ?>" href="#"><i class="fa fa-<?php echo $site_element_type->icon; ?>"></i> Add <?php echo $site_element_type->name; ?></a>
+          <?php
+        }
+      ?>
+<!--      <a class="btn btn-primary btn-lg btn-block avi-add-new-widget" id="btnAddText" data-type="text" href="#"><i class="fa fa-pencil"></i> Add Text</a> -->
+<!--      <a class="btn btn-default btn-lg btn-block avi-add-new-widget" data-type="picture" href="#"><i class="fa fa-image"></i> Add Picture</a> -->
+  <!--      <a class="btn btn-default btn-block" id="add-new-widget" href="#"><i class="fa fa-plus"></i> Add Video</a>-->
+  <!--      <a class="btn btn-default btn-block" id="add-new-widget" href="#"><i class="fa fa-map-pin"></i> Add Map</a>-->
+<!--      <a class="btn btn-default btn-block avi-add-new-widget" data-type="contact-form" href="#"><i class="fa fa-paper-plane"></i> Add Contact Form</a> -->
+  <!--      <a class="btn btn-default btn-block" id="add-new-widget" href="#"><i class="fa fa-car"></i> Add Celtic Tuning</a> -->
+<!--      <a class="btn btn-default btn-block avi-add-new-widget" data-type="button" href="#"><i class="fa fa-chain"></i> Add Button</a> -->
       
       <hr>
       <p>
         Background color:
       </p>
       <div class="input-group demo2">
-        <input type="text" value="#ffffff" class="form-control" />
+        <input type="text" id="mainBgColor" value="#ffffff" class="form-control" />
         <span class="input-group-addon"></span>
       </div>
       <p>
         Background image:
       </p>
       <form action="upload.php" method="post" enctype="multipart/form-data" target="uploadpit">
-        <input type="file" name="background" class="form-control avi-bodyBg">
+        <input type="file" name="background" id="mainBgImage" class="form-control avi-bodyBg">
       </form>
       <hr>
       <button class="btn btn-default btn-block disabled" id="avicreatepage" disabled type="button"><i class="fa fa-chain"></i> Create page</button>

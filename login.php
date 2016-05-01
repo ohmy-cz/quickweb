@@ -44,13 +44,15 @@
   </head>
   
   <body>
-    <h1>
-      Please log in with Facebook
-    </h1>
-    <p>
-      This is required so we can verify that you are a real person. It also helps us keep your private data safe.
-    </p>
-    <button type="button" class="btn btn-primary btn-block" id="btnLogin">Login (simulation)</a>
+    <div class="container">
+      <h1>
+        Please log in with Facebook
+      </h1>
+      <p>
+        This is required so we can verify that you are a real person. It also helps us keep your private data safe.
+      </p>
+      <button type="button" class="btn btn-primary btn-block" id="btnLogin">Login (simulation)</button>
+    </div>
     <script src="js/common.js"></script>
     <script src="js/login.js"></script>
   </body>

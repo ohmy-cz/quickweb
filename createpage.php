@@ -8,6 +8,7 @@
    $out['status'] = 0;
    try {
      require_once('classes/page.php');
+     require_once('helpers/string.php');
      session_start();
      $d = json_decode(file_get_contents('php://input'), true);
      if(!isset($d['layout']))
@@ -18,6 +19,28 @@
        $_SESSION['currentpage'] = new Page;
        $_SESSION['currentpage']->created = date('Y-m-d H:i:s');
        $_SESSION['currentpage']->layout = $d['layout'];
+       $_SESSION['currentpage']->bg_color = sanitize($d['bg_color']);
+       $_SESSION['currentpage']->bg_image = sanitize($d['bg_image']);
+       // sanitize data
+       foreach($_SESSION['currentpage']->layout as $key=>$layout_element)
+       {
+         try {
+           $layout_element->content = base64_encode($layout_element->content);
+           $layout_element->height = intval($layout_element->height);
+           $layout_element->width = intval($layout_element->height);
+           $layout_element->type = intval($layout_element->type);
+           $layout_element->x = intval($layout_element->x);
+           $layout_element->y = intval($layout_element->y);
+         } catch(Exception $e) {
+           error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not sanitize layout data: ' . $e->getMessage(), 3, 'logs/critical.log');
+           // delete the current configuration to prevent stacking up of the attack
+           $_SESSION['currentpage'] = null;
+           unset($_SESSION['currentpage']);
+           die('error');
+         }
+         
+         $_SESSION['currentpage']->layout[$key] = $layout_element;
+       }
        $out['status'] = 1;
      }
    } catch(Exception $e) {

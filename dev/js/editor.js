@@ -202,6 +202,9 @@ $(function () {
       var owner = $(this);
       if(!owner.hasClass('disabled'))
       {
+        // Close the editing mode before we proceed.
+        $('.avi-editing').trigger('click');
+        
         if($('.grid-stack-item:visible').length > 0)
         {
           var grid = $('.grid-stack').data('gridstack');
@@ -210,7 +213,7 @@ $(function () {
               el = $(el);
               var node = el.data('_gridstack_node');
               return {
-                  //id: el.attr('data-custom-id'),
+                  type: el.data('type'),
                   x: node.x,
                   y: node.y,
                   width: node.width,
@@ -227,7 +230,11 @@ $(function () {
             type: 'POST',
             dataType: 'json',
             contentType:"application/json; encoding=utf8",
-            data: JSON.stringify({layout: items}),
+            data: JSON.stringify({
+              layout: items,
+              bg_color: $('#mainBgColor').val(),
+              bg_image: $('#mainBgImage').val()
+            }),
             success: function(r) {
               if(parseInt(r.status) > 0)
               {
@@ -360,7 +367,7 @@ $(function () {
             el = $(el);
             var node = el.data('_gridstack_node');
             return {
-                id: el.attr('data-custom-id'),
+                type: el.data('type'),
                 x: node.x,
                 y: node.y,
                 width: node.width,
@@ -399,17 +406,25 @@ $(function () {
         };      
         
         var sn = false;
-        if($(this).data('type') === 'text')
+        // Text Editor
+        if($(this).data('type') === 1)
         {
           sn = $('<textarea class="avi-editor"></textarea>');
         }
         var newItem = $(AVIJST.newItem({
           editor: (sn ? true : false)
         }));
-        if($(this).data('type') === 'contact-form')
+        
+        // Todo: implement Buttons
+        
+        // Contact form
+        if($(this).data('type') === 4)
         {
           newItem.find('.grid-stack-item-content').append(AVIJST.contactForm());
         }
+        
+        // Important to determine widget type after serialization
+        newItem.data('type', $(this).data('type'));
         
         grid.addWidget(newItem, node.x, node.y, node.width, node.height);
         

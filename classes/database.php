@@ -1,6 +1,6 @@
 <?php
   class Database {
-    var $db;
+    var $dbo;
     
     function __construct()
     {
@@ -8,19 +8,19 @@
       {
         die('Database connection credentials not provided');
       }
-      $this->db = new mysqli(AVIQW_DBHOST, AVIQW_DBUSER, AVIQW_DBPASS, AVIQW_DBNAME);
-      if ($this->db->connect_errno) {
-          die('Failed to connect to MySQL: (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
+      $this->dbo = new mysqli(AVIQW_DBHOST, AVIQW_DBUSER, AVIQW_DBPASS, AVIQW_DBNAME);
+      if ($this->dbo->connect_errno) {
+          die('Failed to connect to MySQL: (' . $this->dbo->connect_errno . ') ' . $this->dbo->connect_error);
       }
     }
     
     function query($sql)
     {
-      return $this->db->query($sql);
+      return $this->dbo->query($sql);
     }
     
     function __destroy()
     {
-      $this->db->close();
+      $this->dbo->close();
     }
   }

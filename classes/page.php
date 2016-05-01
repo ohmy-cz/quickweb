@@ -8,4 +8,6 @@
     var $created;
     var $updated;
     var $layout;
+    var $bg_color;
+    var $bg_image;
   }
