@@ -1,0 +1,2 @@
+function sanitize(a){"use strict";for(var b=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","-"],c="",d=a.toLowerCase().replace(/ /gi,"-"),e=0;e<a.length;e++){var f=d.substr(e,1);"å"!==f?"æ"!==f?"ø"!==f?-1!==b.indexOf(f)&&(c+=f):c+="oe":c+="ae":c+="ao"}return c}$(document).on("keyup","#name",function(){$("#slug").val(sanitize($(this).val()))});
+//# sourceMappingURL=pagemeta.js.map

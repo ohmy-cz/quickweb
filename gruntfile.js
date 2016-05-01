@@ -63,7 +63,8 @@ module.exports = function(grunt) {
             'bower_components/summernote/dist/summernote.js', 
             'dev/js/editor.js'
           ],
-          'js/login.js': 'dev/js/login.js'
+          'js/login.js': 'dev/js/login.js',
+          'js/pagemeta.js': 'dev/js/pagemeta.js'
         }
       }
     },

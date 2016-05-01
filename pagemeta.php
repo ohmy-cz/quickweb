@@ -1,27 +1,30 @@
 <?php
-  session_start();
   // todo: facebook login here
   // https://developers.facebook.com/docs/facebook-login/web
   
   require('config.php');
   require_once('helpers/string.php');
+  require_once('classes/page.php');
+  require_once('classes/layout_element.php');
   require_once('classes/database.php');
-  if(isset($_POST))
+  session_start();
+  if(isset($_POST['send']))
   {
     if(isset($_POST['name']) && isset($_POST['slug']) && isset($_POST['publishedsince']))
     {
       // Prepare data
+      $currentPage = $_SESSION['currentpage'];
       $name = sanitize(trim($_POST['name']), true, true, true);
       $slug = sanitize(trim(strtolower($_POST['slug'])));
       $publishedsince = sanitize(trim($_POST['publishedsince']), true, true);
-      $bg_color = sanitize($_SESSION['currentpage']->bg_color);
-      $bg_image = sanitize($_SESSION['currentpage']->bg_image);
+      $bg_color = sanitize($currentPage->bg_color);
+      $bg_image = sanitize($currentPage->bg_image);
       
       $db = new Database();
       
       // check that the slug is unique
       $sql = 'select id from sites where slug="' . $slug . '"';
-      if($db->query($sql)->num_rows() > 0)
+      if($db->query($sql)->num_rows > 0)
       {
         die('Another site with this slug "' . $slug . '" exists!');
       }
@@ -42,14 +45,14 @@
         "' . date('Y-m-d H:i:s') . '", 
         "' . $publishedsince . '", 
         "' . $bg_color . '", 
-        "' . $bg_image . '", 
+        "' . $bg_image . '"
       )';
       
       $r = $db->query($sql);
       if($r)
       {
         // save the elements!
-        foreach($_SESSION['currentpage']->layout as $layout_element)
+        foreach($currentPage->layout as $layout_element)
         {
           $sql = 'insert into site_elements (
             site, 
@@ -104,12 +107,13 @@
         Enter information about your page
       </h1>
       <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <input type="hidden" name="send" value="1">
         <div class="form-group">
           <label class="control-label col-md-2">
             Name
           </label>
           <div class="col-md-10">
-            <input type="text" name="name" class="form-control" required>
+            <input type="text" name="name" id="name" class="form-control" required>
           </div>
         </div>
         <div class="form-group">
@@ -119,7 +123,7 @@
           <div class="col-md-10">
             <span class="input-group">
               <span class="input-group-addon">http://<?php echo $_SERVER['SERVER_NAME'] . '/quickweb/'; ?></span>
-              <input type="url" name="slug" class="form-control" required>
+              <input type="text" id="slug" name="slug" class="form-control" readonly required>
             </span>
           </div>
         </div>
@@ -128,13 +132,13 @@
             Published since
           </label>
           <div class="col-md-10">
-            <input type="datetime" name="publishedsince" class="form-control" required>
+            <input type="datetime" value="<?php echo date('Y-m-d H:i:s'); ?>" name="publishedsince" class="form-control" required>
           </div>
         </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btnLogin">Save page</button>
       </form>
-      <button type="button" class="btn btn-primary btn-block" id="btnLogin">Login (simulation)</button>
     </div>
     <script src="js/common.js"></script>
-    <script src="js/login.js"></script>
+    <script src="js/pagemeta.js"></script>
   </body>
 </html>

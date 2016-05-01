@@ -34,6 +34,9 @@
     // redirect tt the next step.
     header('Location: pagemeta.php');
   }
+  echo '<!--';
+  print_r($_SESSION['currentpage']);
+  echo '-->';
 ?>
 <!doctype html>
 <html>

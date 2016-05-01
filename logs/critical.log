@@ -1,0 +1,17 @@
+2016-05-01 21:26:02 C:\htdocs\avisioned\quickweb\pagemeta.php Required parameters not provided!2016-05-01 21:30:17 C:\htdocs\avisioned\quickweb\pagemeta.php Required parameters not provided!2016-05-01 22:03:47 C:\htdocs\avisioned\quickweb\pagemeta.php Could not create a site!\r\ninsert into sites (
+        owner, 
+        slug, 
+        name, 
+        created, 
+        publishedsince, 
+        bg_color, 
+        bg_image
+      ) values (
+        1, 
+        "jjjk", 
+        "jjjk776864654", 
+        "2016-05-01 22:03:47", 
+        "2016-05-01 21:57:41", 
+        "ffffff", 
+        "", 
+      )\r\nYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 17
