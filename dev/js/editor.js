@@ -5,6 +5,7 @@ $(function () {
   var hideGuideGrid = false;  
   var guidesGrid = [];
   var hideGridTimeout = null;
+  var pageConfig = null;
 
   
   
@@ -27,7 +28,7 @@ $(function () {
     // Only restore when there are any restoration data available
     if(AVIQWPageConfig && AVIQWElementsConfig)
     {
-      var pageConfig = JSON.parse(AVIQWPageConfig);
+      pageConfig = JSON.parse(AVIQWPageConfig);
       var elementsConfig = JSON.parse(AVIQWElementsConfig);
       if(pageConfig && elementsConfig)
       {
@@ -49,14 +50,18 @@ $(function () {
                       // if we don't do this, this element will effectively exist twice and that causes the resize button to stop working.
                       nodeHtml.html(newItem.filter('.grid-stack-item-content,.avi-itemBtn'));
                     }
-                    // Important to determine widget type after serialization
-                    nodeHtml.data('type', node.type);
+                    
+                    nodeHtml
+                      // Important to determine widget type after serialization
+                      .data('type', node.type)
+                      // to tell the system what element to update
+                      .data('id', node.id);
                     
                     // Enable the tint button in restored items
                     nodeHtml.find('.avi-tint').colorpicker();
                     
                     this.grid.addWidget(nodeHtml,
-                        node.x, node.y, node.width, node.height);
+                        node.coordinate_x, node.coordinate_y, node.size_x, node.size_y);
                 }, this);
                 return false;
             }.bind(this);
@@ -287,21 +292,26 @@ $(function () {
           
           console.log(items);
           owner.addClass('disabled').prop('disabled', true);
+          if(pageConfig === null)
+          {
+            pageConfig = {};
+          }
+          
+          pageConfig.layout = items;
+          pageConfig.bg_color = $('#mainBgColor').val();
+          pageConfig.bg_image = $('#mainBgImage').val();
+          
           $.ajax({
             url: 'createpage.php',
             cache: false,
             type: 'POST',
             dataType: 'json',
             contentType:"application/json; encoding=utf8",
-            data: JSON.stringify({
-              layout: items,
-              bg_color: $('#mainBgColor').val(),
-              bg_image: $('#mainBgImage').val()
-            }),
+            data: JSON.stringify(pageConfig),
             success: function(r) {
               if(parseInt(r.status) > 0)
               {
-//                window.location = 'login.php';
+                window.location = 'login.php';
               } else {
                 alert(r.error);
               }
@@ -375,7 +385,7 @@ $(function () {
       var yiq = ((c.r*299)+(c.g*587)+(c.b*114))/1000;
       var textColor = (yiq >= 128) ? 'black' : 'white';
       var layoutElement = $(event.target).parent();
-      layoutElement
+      siteElement
         .find('.grid-stack-item-content,.note-editable')
           .css('background-color', 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + c.a + ')')
           .find('.control-label')
@@ -383,9 +393,9 @@ $(function () {
       console.log(c.a);
       if(c.a === 0)
       {
-        layoutElement.find('.grid-stack-item-content').removeClass('avi-contentPadding');
+        siteElement.find('.grid-stack-item-content').removeClass('avi-contentPadding');
       } else {
-        layoutElement.find('.grid-stack-item-content').addClass('avi-contentPadding');
+        siteElement.find('.grid-stack-item-content').addClass('avi-contentPadding');
       }
     });
 /*      .on('showPicker.colorpicker', function(){
@@ -447,10 +457,10 @@ $(function () {
             var node = el.data('_gridstack_node');
             return {
                 type: el.data('type'),
-                x: node.x,
-                y: node.y,
-                width: node.width,
-                height: node.height
+                coordinate_x: node.x,
+                coordinate_y: node.y,
+                size_x: node.width,
+                size_y: node.height
             };
         });
         
@@ -461,15 +471,15 @@ $(function () {
         for(var i in items)
         {
           // Find the furthest vertical item first
-          if(items[i].y > furthestY)
+          if(items[i].coordinate_y > furthestY)
           {
-            furthestY = items[i].y + items[i].height;
+            furthestY = items[i].coordinate_y + items[i].size_y;
           }
           
           // Find the furthest horizontal dimension of the furthest vertical item
-          if(items[i].y >= furthestY)
+          if(items[i].coordinate_y >= furthestY)
           {
-            furthestX = items[i].x + items[i].width;
+            furthestX = items[i].coordinate_x + items[i].size_x;
           }
         }
         
@@ -478,10 +488,10 @@ $(function () {
         
         
         var node = {
-            x: nextX,
-            y: nextY,
-            width: 6,
-            height: 4
+            coordinate_x: nextX,
+            coordinate_y: nextY,
+            size_x: 6,
+            size_y: 4
         };      
         
         var sn = false;
@@ -503,9 +513,10 @@ $(function () {
         }
         
         // Important to determine widget type after serialization
-        newItem.data('type', $(this).data('type'));
+        newItem
+          .data('type', $(this).data('type'));
         
-        grid.addWidget(newItem, node.x, node.y, node.width, node.height);
+        grid.addWidget(newItem, node.coordinate_x, node.coordinate_y, node.size_x, node.size_y);
         
         // Enable the tint button in new items
         newItem.find('.avi-tint').colorpicker();

@@ -2,7 +2,8 @@
   require('config.php');
   require_once('helpers/string.php');
   require_once('classes/database.php');
-  require_once('classes/layout_element.php');
+  require_once('classes/page.php');
+  require_once('classes/site_element.php');
   $db = new Database();
   
   if(isset($_GET['slug']))
@@ -772,20 +773,32 @@
       if(isset($site))
       {
         // Only expose data needed to reconstruct the site in javascript
-        $json_site = json_encode(array('bg_color' => $site->bg_color, 'bg_image' => $site->bg_image));
+//        array('bg_color' => $site->bg_color, 'bg_image' => $site->bg_image
+        $siteConfig = new Page;
+        $siteConfig->id = $site->id;
+        $siteConfig->slug = $site->slug;
+        $siteConfig->name = $site->name;
+        $siteConfig->publishedsince = $site->publishedsince;
+        $siteConfig->bg_color = $site->bg_color;
+        $siteConfig->bg_image = $site->bg_image;
+        $json_site = json_encode($siteConfig);
         $sql = 'select * from site_elements where site = ' . intval($site->id);
         $r1 = $db->query($sql);
         $site_elements = array();
         while($site_element = $r1->fetch_object())
         {
-          $layout_element = new LayoutElement;
-          $layout_element->x = intval($site_element->coordinate_x);
-          $layout_element->y = intval($site_element->coordinate_x);
-          $layout_element->width = intval($site_element->size_x);
-          $layout_element->height = intval($site_element->size_y);
-          $layout_element->type = intval($site_element->type);
-          $layout_element->content = base64_decode($site_element->content);
-          array_push($site_elements, $layout_element);
+          $sanitized_site_element = new SiteElement;
+          $sanitized_site_element->id = intval($site_element->id);
+          $sanitized_site_element->coordinate_x = intval($site_element->coordinate_x);
+          $sanitized_site_element->coordinate_y = intval($site_element->coordinate_y);
+          $sanitized_site_element->size_x = intval($site_element->size_x);
+          $sanitized_site_element->size_y = intval($site_element->size_y);
+          $sanitized_site_element->type = intval($site_element->type);
+          $sanitized_site_element->content = base64_decode($site_element->content);
+          $sanitized_site_element->bg_image = base64_decode($site_element->bg_image);
+          $sanitized_site_element->bg_color = sanitize($site_element->bg_color);
+          $sanitized_site_element->created = sanitize($site_element->created, true, true);
+          array_push($site_elements, $sanitized_site_element);
         }
         $json_elements = json_encode($site_elements);
         ?>

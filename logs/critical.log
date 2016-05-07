@@ -1,17 +1,23 @@
-2016-05-01 21:26:02 C:\htdocs\avisioned\quickweb\pagemeta.php Required parameters not provided!2016-05-01 21:30:17 C:\htdocs\avisioned\quickweb\pagemeta.php Required parameters not provided!2016-05-01 22:03:47 C:\htdocs\avisioned\quickweb\pagemeta.php Could not create a site!\r\ninsert into sites (
-        owner, 
-        slug, 
-        name, 
-        created, 
-        publishedsince, 
-        bg_color, 
-        bg_image
-      ) values (
-        1, 
-        "jjjk", 
-        "jjjk776864654", 
-        "2016-05-01 22:03:47", 
-        "2016-05-01 21:57:41", 
-        "ffffff", 
-        "", 
-      )\r\nYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 17
+2016-05-08 00:16:36 C:\htdocs\avisioned\quickweb\pagemeta.php Could not create a site element!\r\ninsert into site_elements (
+                site, 
+                type, 
+                coordinate_x, 
+                coordinate_y, 
+                created,
+                size_x,
+                size_y,
+                bg_image,
+                bg_color,
+                content
+              ) values (
+                0, 
+                2, 
+                "3", 
+                "8", 
+                "2016-05-08 00:16:36", 
+                "4", 
+                "2", 
+                "", 
+                "", 
+                "JTNDZGl2JTIwY2xhc3MlM0QlMjJncmlkLXN0YWNrLWl0ZW0tY29udGVudCUyMGF2aS1jb250ZW50UGFkZGluZyUyMiUzRSUzQyUyRmRpdiUzRSUzQ3NwYW4lMjBjbGFzcyUzRCUyMmF2aS1pdGVtQnRuJTIwYXZpLXRpbnQlMjBjb2xvcnBpY2tlci1lbGVtZW50JTIyJTIwc3R5bGUlM0QlMjJvcGFjaXR5JTNBJTIwMSUzQiUyMiUzRSUzQ2klMjBjbGFzcyUzRCUyMmZhJTIwZmEtdGludCUyMiUzRSUzQyUyRmklM0UlM0MlMkZzcGFuJTNFJTNDc3BhbiUyMGNsYXNzJTNEJTIyYXZpLWl0ZW1CdG4lMjBhdmktYmclMjBhdmktaXRlbUJ0bkhpZ2hsaWdodCUyMiUyMGRhdGEtdG9nZ2xlJTNEJTIydG9vbHRpcCUyMiUyMHRpdGxlJTNEJTIydGVzdCUyMiUyMHN0eWxlJTNEJTIyb3BhY2l0eSUzQSUyMDElM0IlMjIlM0UlM0NpJTIwY2xhc3MlM0QlMjJmYSUyMGZhLWltYWdlJTIyJTNFJTNDJTJGaSUzRSUzQyUyRnNwYW4lM0UlM0NzcGFuJTIwY2xhc3MlM0QlMjJhdmktaXRlbUJ0biUyMGF2aS1kcmFnSGFuZGxlJTIyJTIwc3R5bGUlM0QlMjJvcGFjaXR5JTNBJTIwMSUzQiUyMiUzRSUzQ2klMjBjbGFzcyUzRCUyMmZhJTIwZmEtYXJyb3dzJTIyJTNFJTNDJTJGaSUzRSUzQyUyRnNwYW4lM0UlM0NzcGFuJTIwY2xhc3MlM0QlMjJhdmktaXRlbUJ0biUyMGF2aS1yZXNpemUlMjIlMjBzdHlsZSUzRCUyMm9wYWNpdHklM0ElMjAxJTNCJTIyJTNFJTNDaSUyMGNsYXNzJTNEJTIyZmElMjBmYS1leHBhbmQlMjIlM0UlM0MlMkZpJTNFJTNDJTJGc3BhbiUzRSUzQ2RpdiUyMGNsYXNzJTNEJTIydWktcmVzaXphYmxlLWhhbmRsZSUyMHVpLXJlc2l6YWJsZS1zZSUyMHVpLWljb24lMjB1aS1pY29uLWdyaXBzbWFsbC1kaWFnb25hbC1zZSUyMiUyMHN0eWxlJTNEJTIyei1pbmRleCUzQSUyMDkwJTNCJTIwZGlzcGxheSUzQSUyMG5vbmUlM0IlMjIlM0UlM0MlMkZkaXYlM0U="
+              )\r\nCannot add or update a child row: a foreign key constraint fails (`kea_quickweb`.`site_elements`, CONSTRAINT `fk_site_elements_site` FOREIGN KEY (`site`) REFERENCES `sites` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION)
