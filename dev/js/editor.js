@@ -384,7 +384,7 @@ $(function () {
       var c = event.color.toRGB();
       var yiq = ((c.r*299)+(c.g*587)+(c.b*114))/1000;
       var textColor = (yiq >= 128) ? 'black' : 'white';
-      var layoutElement = $(event.target).parent();
+      var siteElement = $(event.target).parent();
       siteElement
         .find('.grid-stack-item-content,.note-editable')
           .css('background-color', 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + c.a + ')')
