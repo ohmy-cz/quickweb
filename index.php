@@ -4,6 +4,18 @@
   require_once('classes/database.php');
   require_once('classes/layout_element.php');
   $db = new Database();
+  
+  if(isset($_GET['slug']))
+  {
+      $sql = 'select * from sites where slug = "' . sanitize($_GET['slug']) . '" limit 1';
+      $r = $db->query($sql);
+      $site = $r->fetch_object();
+      
+      if($db->dbo->error || $site == null)
+      {
+        die('Requested page has not been found!');
+      }
+  }
 ?><!doctype html>
 <html>
 <head>
@@ -749,7 +761,7 @@
         <input type="file" name="background" id="mainBgImage" class="form-control avi-bodyBg">
       </form>
       <hr>
-      <button class="btn btn-default btn-block disabled" id="avicreatepage" disabled type="button"><i class="fa fa-chain"></i> Create page</button>
+      <button class="btn btn-default btn-block disabled" id="avicreatepage" disabled type="button"><i class="fa fa-chain"></i> <?php echo isset($site) ? 'Save changes' : 'Create page'; ?></button>
     </div>
   </div>
 <!--<div id="summernote">Hello Summernote</div>-->
@@ -757,38 +769,31 @@
     <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript" src="js/editor.js"></script>
     <?php
-      if(isset($_GET['slug']))
+      if(isset($site))
       {
-          $sql = 'select * from sites where slug = "' . sanitize($_GET['slug']) . '" limit 1';
-          $r = $db->query($sql);
-          if($site = $r->fetch_object())
-          {
-            // Only expose data needed to reconstruct the site in javascript
-            $json_site = json_encode(array('bg_color' => $site->bg_color, 'bg_image' => $site->bg_image));
-            $sql = 'select * from site_elements where site = ' . intval($site->id);
-            $r1 = $db->query($sql);
-            $site_elements = array();
-            while($site_element = $r1->fetch_object())
-            {
-              $layout_element = new LayoutElement;
-              $layout_element->x = intval($site_element->coordinate_x);
-              $layout_element->y = intval($site_element->coordinate_x);
-              $layout_element->width = intval($site_element->size_x);
-              $layout_element->height = intval($site_element->size_y);
-              $layout_element->type = intval($site_element->type);
-              $layout_element->content = base64_decode($site_element->content);
-              array_push($site_elements, $layout_element);
-            }
-            $json_elements = json_encode($site_elements);
-            ?>
-            <script type="text/javascript">
-              var AVIQWPageConfig = '<?php echo $json_site; ?>';
-              var AVIQWElementsConfig = '<?php echo $json_elements; ?>';
-            </script>
-            <?php
-          } else {
-            die('Requested page has not been found!');
-          }
+        // Only expose data needed to reconstruct the site in javascript
+        $json_site = json_encode(array('bg_color' => $site->bg_color, 'bg_image' => $site->bg_image));
+        $sql = 'select * from site_elements where site = ' . intval($site->id);
+        $r1 = $db->query($sql);
+        $site_elements = array();
+        while($site_element = $r1->fetch_object())
+        {
+          $layout_element = new LayoutElement;
+          $layout_element->x = intval($site_element->coordinate_x);
+          $layout_element->y = intval($site_element->coordinate_x);
+          $layout_element->width = intval($site_element->size_x);
+          $layout_element->height = intval($site_element->size_y);
+          $layout_element->type = intval($site_element->type);
+          $layout_element->content = base64_decode($site_element->content);
+          array_push($site_elements, $layout_element);
+        }
+        $json_elements = json_encode($site_elements);
+        ?>
+        <script type="text/javascript">
+          var AVIQWPageConfig = '<?php echo $json_site; ?>';
+          var AVIQWElementsConfig = '<?php echo $json_elements; ?>';
+        </script>
+        <?php
       }
     ?>
 </body>

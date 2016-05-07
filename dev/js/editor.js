@@ -44,12 +44,17 @@ $(function () {
                     // If there's any saved HTML, let's replace the default empty content.
                     if(node.content)
                     {
-                      var rawHtml = $(decodeURIComponent(node.content));
+                      var newItem = $(decodeURIComponent(node.content));
                       // we need to remove an invisible resizing div, added by jQuery UI that's being captured when an element is saved. 
                       // if we don't do this, this element will effectively exist twice and that causes the resize button to stop working.
-//                      rawHtml.filter('.ui-resizable-handle').remove();
-                      nodeHtml.html(rawHtml.filter('.grid-stack-item-content,.avi-itemBtn'));
+                      nodeHtml.html(newItem.filter('.grid-stack-item-content,.avi-itemBtn'));
                     }
+                    // Important to determine widget type after serialization
+                    nodeHtml.data('type', node.type);
+                    
+                    // Enable the tint button in restored items
+                    nodeHtml.find('.avi-tint').colorpicker();
+                    
                     this.grid.addWidget(nodeHtml,
                         node.x, node.y, node.width, node.height);
                 }, this);
@@ -296,7 +301,7 @@ $(function () {
             success: function(r) {
               if(parseInt(r.status) > 0)
               {
-                window.location = 'login.php';
+//                window.location = 'login.php';
               } else {
                 alert(r.error);
               }
@@ -358,6 +363,31 @@ $(function () {
       });
       $(this).after(fup.fadeIn('slow'));
     })
+    .on('showPicker.colorpicker', function(event){        
+      allowItemsButtonsFadeOut = false;
+    })
+    .on('hidePicker.colorpicker', function(event){
+      allowItemsButtonsFadeOut = true;
+    })
+    .on('changeColor.colorpicker', function(event){
+      console.log(event);
+      var c = event.color.toRGB();
+      var yiq = ((c.r*299)+(c.g*587)+(c.b*114))/1000;
+      var textColor = (yiq >= 128) ? 'black' : 'white';
+      var layoutElement = $(event.target).parent();
+      layoutElement
+        .find('.grid-stack-item-content,.note-editable')
+          .css('background-color', 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + c.a + ')')
+          .find('.control-label')
+            .css('color', textColor);
+      console.log(c.a);
+      if(c.a === 0)
+      {
+        layoutElement.find('.grid-stack-item-content').removeClass('avi-contentPadding');
+      } else {
+        layoutElement.find('.grid-stack-item-content').addClass('avi-contentPadding');
+      }
+    });
 /*      .on('showPicker.colorpicker', function(){
         console.log('hoo');
         hideGuideGrid = true;
@@ -365,7 +395,10 @@ $(function () {
       .on('hidePicker.colorpicker', function(){
         hideGuideGrid = false;
       });*/
-    $('.demo2').colorpicker()
+      
+      
+      
+/*    $('.demo2').colorpicker()
       .on('showPicker.colorpicker', function(event){        
         hideGuideGrid = true;
       })
@@ -377,7 +410,7 @@ $(function () {
         clearTimeout(hideGridTimeout);
         hideGridTimeout = null;
         $('.avi-guidesGrid').stop().clearQueue().css('opacity', 0);
-      });
+      });*/
     
     
     
@@ -395,9 +428,6 @@ $(function () {
     
     
     
-    
-
-  new function () {
     
     $(document)
       .on( 'resizestop', '.grid-stack-item', function( event, ui ) {
@@ -477,40 +507,16 @@ $(function () {
         
         grid.addWidget(newItem, node.x, node.y, node.width, node.height);
         
-        newItem.find('.avi-tint')
-          .colorpicker()
-            .on('showPicker.colorpicker', function(event){        
-              allowItemsButtonsFadeOut = false;
-            })
-            .on('hidePicker.colorpicker', function(event){
-              allowItemsButtonsFadeOut = true;
-            })
-            .on('changeColor.colorpicker', function(event){
-              var c = event.color.toRGB();
-              var yiq = ((c.r*299)+(c.g*587)+(c.b*114))/1000;
-              var textColor = (yiq >= 128) ? 'black' : 'white';
-              newItem
-                .find('.grid-stack-item-content,.note-editable')
-                  .css('background-color', 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + c.a + ')')
-                  .find('.control-label')
-                    .css('color', textColor);
-              console.log(c.a);
-              if(c.a === 0)
-              {
-                newItem.find('.grid-stack-item-content').removeClass('avi-contentPadding');
-              } else {
-                newItem.find('.grid-stack-item-content').addClass('avi-contentPadding');
-              }
-            });
-            
-            if(sn)
-            {
-              newItem.find('.grid-stack-item-content').append(sn);
-              newEditor(newItem.find('textarea.avi-editor'));
-            }
-          });
-  };
-  
+        // Enable the tint button in new items
+        newItem.find('.avi-tint').colorpicker();
+        
+        
+        if(sn)
+        {
+          newItem.find('.grid-stack-item-content').append(sn);
+          newEditor(newItem.find('textarea.avi-editor'));
+        }
+      });
   
   
   
@@ -522,14 +528,6 @@ $(function () {
           return $('.device-' + alias).is(':visible');
       }
 
-
-/*      var options = {
-          float: false,
-          draggable: {
-            handle: '.avi-dragHandle'
-          }
-      };*/
-      //$('.grid-stack').gridstack(options);
       function resizeGrid() {
           var grid = $('.grid-stack').data('gridstack');
           if (isBreakpoint('xs')) {
@@ -550,35 +548,6 @@ $(function () {
               resizeGrid();
           }, 300, fullDateString.getTime());
       });
-/*
-      new function () {
-          this.serializedData = [
-              {x: 0, y: 0, width: 4, height: 2},
-              {x: 3, y: 1, width: 4, height: 2},
-              {x: 4, y: 1, width: 4, height: 1},
-              {x: 2, y: 3, width: 8, height: 1},
-              {x: 0, y: 4, width: 4, height: 1},
-              {x: 0, y: 3, width: 4, height: 1},
-              {x: 2, y: 4, width: 4, height: 1},
-              {x: 2, y: 5, width: 4, height: 1},
-              {x: 0, y: 6, width: 12, height: 1}
-          ];
-
-          this.grid = $('.grid-stack').data('gridstack');
-
-          this.loadGrid = function () {
-              this.grid.removeAll();
-              var items = GridStackUI.Utils.sort(this.serializedData);
-              _.each(items, function (node, i) {
-                  this.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'),
-                      node.x, node.y, node.width, node.height);
-              }, this);
-              return false;
-          }.bind(this);
-
-          this.loadGrid();
-          resizeGrid();
-      };*/
       
       init();
   });

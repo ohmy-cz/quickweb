@@ -29,7 +29,7 @@
            $sanitized_layout_element = new LayoutElement;
            $sanitized_layout_element->content = base64_encode($layout_element['content']);
            $sanitized_layout_element->height = intval($layout_element['height']);
-           $sanitized_layout_element->width = intval($layout_element['height']);
+           $sanitized_layout_element->width = intval($layout_element['width']);
            $sanitized_layout_element->type = intval($layout_element['type']);
            $sanitized_layout_element->x = intval($layout_element['x']);
            $sanitized_layout_element->y = intval($layout_element['y']);
