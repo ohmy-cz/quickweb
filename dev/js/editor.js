@@ -1,10 +1,71 @@
 // JavaScript Document
 $(function () {
-  console.log('hello');
+  'use strict';
   var allowItemsButtonsFadeOut = true;
-  var hideGuideGrid = false;
+  var hideGuideGrid = false;  
+  var guidesGrid = [];
+  var hideGridTimeout = null;
+
   
-  $('[data-toggle="tooltip"]').tooltip()
+  
+  // Constructor
+  function init()
+  {
+    var options = {
+      float: true,
+      draggable: {
+        handle: '.avi-dragHandle'
+      }
+    };
+    $('.grid-stack').gridstack(options);
+    restoreSavedState();
+    $('[data-toggle="tooltip"]').tooltip();
+  }
+  
+  function restoreSavedState()
+  {
+    // Only restore when there are any restoration data available
+    if(AVIQWPageConfig && AVIQWElementsConfig)
+    {
+      var pageConfig = JSON.parse(AVIQWPageConfig);
+      var elementsConfig = JSON.parse(AVIQWElementsConfig);
+      if(pageConfig && elementsConfig)
+      {
+        new function () {
+            this.serializedData = elementsConfig;
+  
+            this.grid = $('.grid-stack').data('gridstack');
+  
+            this.loadGrid = function () {
+                this.grid.removeAll();
+                var items = GridStackUI.Utils.sort(this.serializedData);
+                _.each(items, function (node, i) {
+                    var nodeHtml = $('<div><div class="grid-stack-item-content"></div></div>');
+                    // If there's any saved HTML, let's replace the default empty content.
+                    if(node.content)
+                    {
+                      var rawHtml = $(decodeURIComponent(node.content));
+                      // we need to remove an invisible resizing div, added by jQuery UI that's being captured when an element is saved. 
+                      // if we don't do this, this element will effectively exist twice and that causes the resize button to stop working.
+//                      rawHtml.filter('.ui-resizable-handle').remove();
+                      nodeHtml.html(rawHtml.filter('.grid-stack-item-content,.avi-itemBtn'));
+                    }
+                    this.grid.addWidget(nodeHtml,
+                        node.x, node.y, node.width, node.height);
+                }, this);
+                return false;
+            }.bind(this);
+  
+            this.loadGrid();
+            resizeGrid();
+        };
+        console.log(pageConfig);
+        console.log(elementsConfig);
+      } else {
+        console.error('No saved data recovered');
+      }
+    }
+  }
   
   function newEditor(o)
   {
@@ -140,9 +201,6 @@ $(function () {
         console.error('Container not found!');
       }
     });
-  
-  var guidesGrid = [];
-  var hideGridTimeout = null;
   // cache all of grid's boxes position and dimensions on page load and window resize, so every time the mouseover code is executed, it will not search the DOM (performance improvement)
   function cacheGuidesGridCoords()
   {
@@ -290,18 +348,16 @@ $(function () {
           }
         }
       }
-    });
-    
-    $(document)
-      .on('click', '.avi-bg', function(e){
-        e.preventDefault();
-        console.log('sds');
-        var fup = $(AVIJST.backgroundPopup());
-        fup.mouseleave(function(){
-          $(this).fadeOut('slow', function(){ $(this).remove(); });
-        });
-        $(this).after(fup.fadeIn('slow'));
-      })
+    })
+    .on('click', '.avi-bg', function(e){
+      e.preventDefault();
+      console.log('sds');
+      var fup = $(AVIJST.backgroundPopup());
+      fup.mouseleave(function(){
+        $(this).fadeOut('slow', function(){ $(this).remove(); });
+      });
+      $(this).after(fup.fadeIn('slow'));
+    })
 /*      .on('showPicker.colorpicker', function(){
         console.log('hoo');
         hideGuideGrid = true;
@@ -340,13 +396,6 @@ $(function () {
     
     
     
-  var options = {
-    float: true,
-    draggable: {
-      handle: '.avi-dragHandle'
-    }
-  };
-  $('.grid-stack').gridstack(options);
 
   new function () {
     
@@ -530,4 +579,6 @@ $(function () {
           this.loadGrid();
           resizeGrid();
       };*/
+      
+      init();
   });
