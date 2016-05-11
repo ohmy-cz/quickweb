@@ -26,7 +26,7 @@ $(function () {
   function restoreSavedState()
   {
     // Only restore when there are any restoration data available
-    if(AVIQWPageConfig && AVIQWElementsConfig)
+    if(typeof(AVIQWPageConfig) !== 'undefined' && AVIQWPageConfig && typeof(AVIQWElementsConfig) !== 'undefined' && AVIQWElementsConfig)
     {
       pageConfig = JSON.parse(AVIQWPageConfig);
       var elementsConfig = JSON.parse(AVIQWElementsConfig);
@@ -150,6 +150,7 @@ $(function () {
               target = $('body');
             }
             target.css('background-image', 'url(\'' + e.target.result + '\')');
+            $(document).trigger('avi:activateSaveBtn');
           };
         })(f);
       console.log('c2');
@@ -183,6 +184,7 @@ $(function () {
     })
     .on('click', '.avi-toggleEdit', function(e){
       e.preventDefault();
+      $(document).trigger('avi:activateSaveBtn');
       var container = $(this).closest('.grid-stack-item').find('.grid-stack-item-content');
       if(container.length > 0)
       {
@@ -281,11 +283,12 @@ $(function () {
               el = $(el);
               var node = el.data('_gridstack_node');
               return {
+                  id: el.data('id'),
                   type: el.data('type'),
-                  x: node.x,
-                  y: node.y,
-                  width: node.width,
-                  height: node.height,
+                  coordinate_x: node.x,
+                  coordinate_y: node.y,
+                  size_x: node.width,
+                  size_y: node.height,
                   content: encodeURIComponent(el.html())
               };
           });
@@ -298,8 +301,9 @@ $(function () {
           }
           
           pageConfig.layout = items;
-          pageConfig.bg_color = $('#mainBgColor').val();
-          pageConfig.bg_image = $('#mainBgImage').val();
+          pageConfig.bg_color = $('body').css('background-color');
+          pageConfig.bg_image = $('body').css('background-image');
+          console.log($('body').css('background-image'));
           
           $.ajax({
             url: 'createpage.php',
@@ -378,9 +382,9 @@ $(function () {
     })
     .on('hidePicker.colorpicker', function(event){
       allowItemsButtonsFadeOut = true;
+      $(document).trigger('avi:activateSaveBtn');
     })
     .on('changeColor.colorpicker', function(event){
-      console.log(event);
       var c = event.color.toRGB();
       var yiq = ((c.r*299)+(c.g*587)+(c.b*114))/1000;
       var textColor = (yiq >= 128) ? 'black' : 'white';
@@ -408,19 +412,13 @@ $(function () {
       
       
       
-/*    $('.demo2').colorpicker()
-      .on('showPicker.colorpicker', function(event){        
-        hideGuideGrid = true;
-      })
-      .on('hidePicker.colorpicker', function(event){
-        hideGuideGrid = false;
-      })
+    $('.avi-mainBg').colorpicker()
       .on('changeColor.colorpicker', function(event){
         $('body,.avi-box').css('background-color', event.color.toHex());
         clearTimeout(hideGridTimeout);
         hideGridTimeout = null;
         $('.avi-guidesGrid').stop().clearQueue().css('opacity', 0);
-      });*/
+      });
     
     
     
@@ -442,20 +440,27 @@ $(function () {
     $(document)
       .on( 'resizestop', '.grid-stack-item', function( event, ui ) {
         var tr = $(this);
-        setTimeout(function(){ resizeSummerNote(tr); },150);
+        setTimeout(function(){ 
+          resizeSummerNote(tr); 
+          $(document).trigger('avi:activateSaveBtn');
+        },150);
         console.log('resized');
       })
-      .on('click', '.avi-add-new-widget', function(e){
-        e.preventDefault();
+      .on('avi:activateSaveBtn', function(){
         // enable the Create button
-        $('#btnAddText').toggleClass('btn-primary btn-default');
+        $('#btnAddText').removeClass('btn-primary').addClass('btn-default');
         $('#avicreatepage').prop('disabled', false).removeClass('disabled btn-default').addClass('btn-primary');
+      })
+      .on('click', '.avi-add-new-widget', function(e){
+        $(document).trigger('avi:activateSaveBtn');
+        e.preventDefault();
         var grid = $('.grid-stack').data('gridstack');
   
         var items = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
             el = $(el);
             var node = el.data('_gridstack_node');
             return {
+                id: el.data('id'),
                 type: el.data('type'),
                 coordinate_x: node.x,
                 coordinate_y: node.y,

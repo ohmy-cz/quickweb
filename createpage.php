@@ -32,19 +32,24 @@
          }
        }
        $_SESSION['currentpage']->layout = $d['layout'];
-       $_SESSION['currentpage']->bg_color = sanitize($d['bg_color']);
-       $_SESSION['currentpage']->bg_image = sanitize($d['bg_image']);
+       $_SESSION['currentpage']->bg_color = sanitize($d['bg_color'], true, true);
+       $_SESSION['currentpage']->bg_image = sanitize(base64_encode($d['bg_image']), true, true, false, true );
+       
        // sanitize data
        foreach($_SESSION['currentpage']->layout as $key=>$site_element)
        {
          try {
            $sanitized_site_element = new SiteElement;
+           if(isset($site_element['id']))
+           {
+             $sanitized_site_element->id = intval($site_element['id']);
+           }
            $sanitized_site_element->content = base64_encode($site_element['content']);
-           $sanitized_site_element->size_y = intval($site_element['height']);
-           $sanitized_site_element->size_x = intval($site_element['width']);
+           $sanitized_site_element->size_y = intval($site_element['size_y']);
+           $sanitized_site_element->size_x = intval($site_element['size_x']);
            $sanitized_site_element->type = intval($site_element['type']);
-           $sanitized_site_element->coordinate_x = intval($site_element['x']);
-           $sanitized_site_element->coordinate_y = intval($site_element['y']);
+           $sanitized_site_element->coordinate_x = intval($site_element['coordinate_x']);
+           $sanitized_site_element->coordinate_y = intval($site_element['coordinate_y']);
            if(isset($site_element['bg_color']))
            {
              $sanitized_site_element->bg_color = sanitize($site_element['bg_color']);

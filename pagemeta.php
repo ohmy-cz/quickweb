@@ -18,8 +18,8 @@
       $name = sanitize(trim($_POST['name']), true, true, true);
       $slug = sanitize(trim(strtolower($_POST['slug'])));
       $publishedsince = sanitize(trim($_POST['publishedsince']), true, true);
-      $bg_color = sanitize($currentPage->bg_color);
-      $bg_image = sanitize($currentPage->bg_image);
+      $bg_color = sanitize($currentPage->bg_color, true, true);
+      $bg_image = sanitize($currentPage->bg_image, true, true, false, true);
       
       $db = new Database();
       
@@ -184,6 +184,60 @@
         }
         // create page end
       }
+      
+      // generate static HTML start
+      $cellHeight = 80 + 15; // height + padding
+      $cellWidth = 8.33; // 1/12
+      ob_start();
+      ?>
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>
+            <?php echo $currentPage->name; ?>
+          </title>
+          <link rel="stylesheet" href="../../css/static.css" type="text/css">
+          <style>
+            body {
+              <?php echo isset($currentPage->bg_image) && trim($currentPage->bg_image) != '' ? 'background-image:' . base64_decode($currentPage->bg_image) .';' : ''; ?>
+              <?php echo isset($currentPage->bg_color) && trim($currentPage->bg_color) != '' ? 'background-color:' . $currentPage->bg_color .';' : ''; ?>
+            }
+          </style>
+        </head>
+        <body>
+          <div class="row avi-container">
+            <?php
+              foreach($currentPage->layout as $site_element)
+              {
+                try{
+                  ?>
+                    <div class="col-sm-<?php echo intval($site_element->size_x); ?>" style="left:<?php echo intval($site_element->coordinate_x) * $cellWidth; ?>%;top:<?php echo intval($site_element->coordinate_y) * $cellHeight; ?>px;height:<?php echo intval($site_element->size_y) * $cellHeight; ?>px;">
+                      <?php echo urldecode(base64_decode($site_element->content)); ?>
+                    </div>
+                  <?php
+                } catch(Exception $e) {
+                }
+              }
+            ?>
+          </div>
+        </body>
+      </html>
+      <?php
+      $staticContent = ob_get_contents();
+      ob_end_clean();
+      
+      $dir = 'static' . DIRECTORY_SEPARATOR . $slug;
+      if(!is_dir($dir))
+      {
+        if(!mkdir($dir))
+        {
+          error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not create a folder!', 3, 'logs/critical.log');
+          die('Error!');
+        }
+      }
+      file_put_contents($dir . DIRECTORY_SEPARATOR . 'index.htm', $staticContent);
+      // generate static HTML end
       
       header('Location: index.php?slug=' . $slug);
     } else {

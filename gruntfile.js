@@ -4,7 +4,8 @@ module.exports = function(grunt) {
     sass: {
       dist: {
         files: {
-          'css/main.css': 'dev/sass/main.scss'
+          'css/main.css': 'dev/sass/main.scss',
+          'css/static.css': 'dev/sass/static.scss'
         }
       }
     },
@@ -79,6 +80,12 @@ module.exports = function(grunt) {
         ],
         dest: 'css/main.css',
       },
+      staticoutputcss: {
+        src: [
+          'dev/tmp/css/static.css'
+        ],
+        dest: 'css/static.css',
+      },
       common: {
         src: [
           'node_modules/jquery/dist/jquery.min.js', 
@@ -114,7 +121,7 @@ module.exports = function(grunt) {
     watch: {
       compass: {
         files: ['dev/sass/*.{scss,sass}'],
-        tasks: ['compass:dev', 'concat:css']
+        tasks: ['compass:dev', 'concat:css', 'concat:staticoutputcss']
       },
       js: {
         files: ['dev/js/*.js'],

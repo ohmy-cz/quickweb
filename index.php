@@ -23,6 +23,14 @@
 <meta charset="utf-8">
   <title>Create site</title>
   <link rel="stylesheet" href="css/main.css" type="text/css">
+  <?php if(isset($site)) { ?>
+    <style>
+      body {
+        <?php echo isset($site->bg_image) && trim($site->bg_image) != '' ? 'background-image:' . base64_decode($site->bg_image) .';' : ''; ?>
+        <?php echo isset($site->bg_color) && trim($site->bg_color) != '' ? 'background-color:' . $site->bg_color .';' : ''; ?>
+      }
+    </style>
+  <?php } ?>
 </head>
 
 <body>
@@ -751,7 +759,7 @@
       <p>
         Background color:
       </p>
-      <div class="input-group demo2">
+      <div class="input-group avi-mainBg">
         <input type="text" id="mainBgColor" value="#ffffff" class="form-control" />
         <span class="input-group-addon"></span>
       </div>
