@@ -1,4 +1,5 @@
 ﻿<?php
+  session_start();
   require('config.php');
   
   //create the log file
@@ -9,10 +10,12 @@
   touch('logs/critical.log');
   
   require_once('helpers/string.php');
+  require_once('classes/form_security.php');
   require_once('classes/database.php');
   require_once('classes/page.php');
   require_once('classes/site_element.php');
   $db = new Database();
+  $formSecurity = new formSecurity();
   
   if(isset($_GET['slug']))
   {
@@ -42,6 +45,7 @@
 </head>
 
 <body>
+  <input type="hidden" id="securitytoken" value="<?php echo $formSecurity->outputKey(); ?>">
   <!--
     <div class="device-xs visible-xs"></div>
     <div class="device-sm visible-sm"></div>

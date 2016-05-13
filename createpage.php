@@ -3,15 +3,24 @@
    * Save current page's layout temporarily for later use.
    */
    
-   // todo: verify data are coming from the same user
-   
+   session_start();
    $out['status'] = 0;
    try {
      require_once('classes/page.php');
      require_once('classes/site_element.php');
      require_once('helpers/string.php');
-     session_start();
+     require_once('classes/form_security.php');
+     $formSecurity = new formSecurity();
+     
      $d = json_decode(file_get_contents('php://input'), true);
+     
+     if(!isset($d['securitytoken']) || !$formSecurity->validate($d['securitytoken']) )
+     {
+       error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' No security token found or invalid', 3, 'logs/critical.log');
+       $out['error'] = 'Error!';
+       $out['status'] = -3;
+     }
+     
      if(!isset($d['layout']))
      {
        $out['status'] = -1;
@@ -63,7 +72,8 @@
            // delete the current configuration to prevent stacking up of the attack
            $_SESSION['currentpage'] = null;
            unset($_SESSION['currentpage']);
-           die('error');
+           $out['error'] = 'Error!';
+           $out['status'] = -4;
          }
          
          $_SESSION['currentpage']->layout[$key] = $sanitized_site_element;

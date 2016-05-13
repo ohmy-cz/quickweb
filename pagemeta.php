@@ -1,15 +1,21 @@
 <?php
-  // todo: facebook login here
-  // https://developers.facebook.com/docs/facebook-login/web
-  
   require('config.php');
   require_once('helpers/string.php');
   require_once('classes/page.php');
   require_once('classes/site_element.php');
   require_once('classes/database.php');
+  require_once('classes/form_security.php');
+  
   session_start();
+  $formSecurity = new formSecurity();
   if(isset($_POST['send']))
   {
+    if(!isset($_POST['securitytoken']) || !$formSecurity->validate($_POST['securitytoken']) )
+    {
+      error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' No security token found or invalid', 3, 'logs/critical.log');
+      die('error');
+    }
+   
     if(isset($_POST['name']) && isset($_POST['slug']) && isset($_POST['publishedsince']))
     {
       // Prepare data
@@ -227,13 +233,13 @@
       $staticContent = ob_get_contents();
       ob_end_clean();
       
-      $dir = 'static' . DIRECTORY_SEPARATOR . $slug;
+      $dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR . $slug;
       if(!is_dir($dir))
       {
         if(!mkdir($dir))
         {
           error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not create a folder!', 3, 'logs/critical.log');
-          die('Error 1!');
+          die('Error: Could not create static folder!');
         }
       }
       file_put_contents($dir . DIRECTORY_SEPARATOR . 'index.htm', $staticContent);
@@ -265,6 +271,7 @@
         Enter information about your page
       </h1>
       <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <input type="hidden" name="securitytoken" value="<?php echo $formSecurity->outputKey(); ?>">
         <input type="hidden" name="send" value="1">
         <div class="form-group">
           <label class="control-label col-md-2">

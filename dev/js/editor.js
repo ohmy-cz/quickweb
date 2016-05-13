@@ -303,6 +303,7 @@ $(function () {
           pageConfig.layout = items;
           pageConfig.bg_color = $('body').css('background-color');
           pageConfig.bg_image = $('body').css('background-image');
+          pageConfig.securitytoken = $('#securitytoken').val();
           console.log($('body').css('background-image'));
           
           $.ajax({
