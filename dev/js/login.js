@@ -1,7 +1,7 @@
 // initialize and setup facebook js sdk
     window.fbAsyncInit = function() {
         FB.init({
-          appId      : '1708614869406617',
+          appId      : window.location.hostname === 'localhost' ? '1709947152606722' : '1708614869406617',
           cookie     : true,
           xfbml      : true,
           version    : 'v2.6'
