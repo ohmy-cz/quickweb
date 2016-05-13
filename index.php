@@ -1,5 +1,13 @@
 ﻿<?php
   require('config.php');
+  
+  //create the log file
+  if(!is_dir('logs'))
+  {
+    mkdir('logs');
+  }
+  touch('logs/critical.log');
+  
   require_once('helpers/string.php');
   require_once('classes/database.php');
   require_once('classes/page.php');

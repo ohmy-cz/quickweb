@@ -233,7 +233,7 @@
         if(!mkdir($dir))
         {
           error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not create a folder!', 3, 'logs/critical.log');
-          die('Error!');
+          die('Error 1!');
         }
       }
       file_put_contents($dir . DIRECTORY_SEPARATOR . 'index.htm', $staticContent);
@@ -242,7 +242,7 @@
       header('Location: index.php?slug=' . $slug);
     } else {
       error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Required parameters not provided!', 3, 'logs/critical.log');
-      die('Error!');
+      die('Error 2!');
     }
   }
 ?>

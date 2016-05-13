@@ -1,0 +1,6 @@
+.sass-cache
+bower_components
+node_modules
+dev/tmp
+logs/*.log
+config.php
