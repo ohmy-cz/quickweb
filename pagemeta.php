@@ -288,7 +288,7 @@
           <div class="col-md-10">
             <span class="input-group">
               <span class="input-group-addon">http://<?php echo $_SERVER['SERVER_NAME'] . '/quickweb/'; ?></span>
-              <input type="text" id="slug" name="slug" value="<?php echo isset($_SESSION['currentpage']) && isset($_SESSION['currentpage']->slug) ? $_SESSION['currentpage']->slug : ''; ?>" class="form-control" readonly required>
+              <input type="text" id="slug" name="slug" maxlength="20" value="<?php echo isset($_SESSION['currentpage']) && isset($_SESSION['currentpage']->slug) ? $_SESSION['currentpage']->slug : ''; ?>" class="form-control" readonly required>
             </span>
           </div>
         </div>
