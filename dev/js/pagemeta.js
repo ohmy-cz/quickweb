@@ -30,5 +30,10 @@ function sanitize(input) {
   return output;
 }
 $(document).on('keyup', '#name', function(){
-  $('#slug').val(sanitize($(this).val()));
+  var slug = $(this).val();
+  if(slug.length >= 20)
+  {
+    slug = slug.substr(0, 20);
+  }
+  $('#slug').val(sanitize(slug));
 });
