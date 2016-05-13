@@ -54,9 +54,12 @@
       <p>
         This is required so we can verify that you are a real person. It also helps us keep your private data safe.
       </p>
-      <button type="button" class="btn btn-primary btn-block" id="btnLogin">Login (simulation)</button>
+      <button onclick="login()" type="button" class="btn btn-primary btn-block" id="btnLogin" >Login</button>
+
+      <div id="status"></div>
     </div>
     <script src="js/common.js"></script>
     <script src="js/login.js"></script>
   </body>
+  
 </html>
