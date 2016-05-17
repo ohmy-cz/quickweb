@@ -12,8 +12,9 @@
   {
     if(!isset($_POST['securitytoken']) || !$formSecurity->validate($_POST['securitytoken']) )
     {
-      error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' No security token found or invalid', 3, 'logs/critical.log');
-      die('error');
+      $eid = uniqid();
+      error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' No security token found or invalid', 3, 'logs/critical.log');
+      die('Error' . $eid);
     }
    
     if(isset($_POST['name']) && isset($_POST['slug']) && isset($_POST['publishedsince']))
@@ -54,7 +55,7 @@
         $sql = 'update sites set
           slug = "' . $slug . '", 
           name = "' . $name . '", 
-          created = "' . date('Y-m-d H:i:s') . '", 
+          updated = "' . date('Y-m-d H:i:s') . '", 
           publishedsince = "' . $publishedsince . '", 
           bg_color = "' . $bg_color . '", 
           bg_image = "' . $bg_image . '"
@@ -85,8 +86,9 @@
               $r1 = $db->query($sql);
               if(!$r1)
               {
-                error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not update a site element!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
-                die('error');
+                $eid = uniqid();
+                error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not update a site element!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
+                die('Error ' . $eid);
               }
             } else {
               // Create a new element for an existing site
@@ -117,14 +119,16 @@
               $r1 = $db->query($sql);
               if(!$r1)
               {
-                error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not create a site element!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
-                die('error');
+                $eid = uniqid();
+                error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not create a site element!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
+                die('Error ' . $eid);
               }
             }
           }
         } else {
-          error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not update a site!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
-          die('error');
+          $eid = uniqid();
+          error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not update a site!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
+          die('Error ' . $eid);
         }
         // update page end
       } else {
@@ -180,13 +184,15 @@
             $r1 = $db->query($sql);
             if(!$r1)
             {
-              error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not create a site element!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
-              die('error');
+              $eid = uniqid();
+              error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not create a site element!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
+              die('Error ' . $eid);
             }
           }
         } else {
-          error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not create a site!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
-          die('error');
+          $eid = uniqid();
+          error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not create a site!\r\n' . $sql . '\r\n' . $db->dbo->error, 3, 'logs/critical.log');
+          die('Error ' . $eid);
         }
         // create page end
       }
@@ -238,8 +244,9 @@
       {
         if(!mkdir($dir))
         {
-          error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not create a folder!', 3, 'logs/critical.log');
-          die('Error: Could not create static folder!');
+          $eid = uniqid();
+          error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not create a folder!', 3, 'logs/critical.log');
+          die('Error ' . $eid);
         }
       }
       file_put_contents($dir . DIRECTORY_SEPARATOR . 'index.htm', $staticContent);
@@ -247,8 +254,9 @@
       
       header('Location: index.php?slug=' . $slug);
     } else {
-      error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Required parameters not provided!', 3, 'logs/critical.log');
-      die('Error 2!');
+      $eid = uniqid();
+      error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Required parameters not provided!', 3, 'logs/critical.log');
+      die('Error ' . $eid);
     }
   }
 ?>

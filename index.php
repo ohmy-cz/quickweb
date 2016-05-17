@@ -788,10 +788,12 @@
        {
          ?>
           <hr>
-          <a class="btn btn-default btn-block" target="_blank" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/quickweb/static/<?php echo $site->slug; ?>/index.htm"><i class="fa fa-external-link"></i> View LIVE site</a>
+          <a class="btn btn-default btn-block" target="_blank" href="static/<?php echo $site->slug; ?>/index.htm"><i class="fa fa-external-link"></i> View LIVE page</a>
         <?php
        }
       ?>
+      <hr>
+      <a class="btn btn-default btn-block" href="login.php?gotoaccount"><i class="fa fa-folder-open"></i> Open existing page</a>
     </div>
   </div>
 <!--<div id="summernote">Hello Summernote</div>-->

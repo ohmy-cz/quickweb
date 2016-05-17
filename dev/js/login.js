@@ -44,7 +44,7 @@
     
     function sendInfo() {
       FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,email'}, function(response) {
-        window.location="login.php?fbid="+response.id+"&name="+response.name+"&email="+response.email;
+        window.location="login.php?fbid="+response.id+"&name="+response.name+"&email="+response.email+(window.location.href.indexOf('gotoaccount') !== -1 ? '&gotoaccount' : '');
         //document.getElementById('status').innerHTML = response.id + ' '+ response.email + ' '+ response.name;
       });
     };

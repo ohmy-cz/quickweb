@@ -16,15 +16,18 @@
      
      if(!isset($d['securitytoken']) || !$formSecurity->validate($d['securitytoken']) )
      {
-       error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' No security token found or invalid', 3, 'logs/critical.log');
-       $out['error'] = 'Error!';
+       $eid = uniqid();
+       error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' No security token found or invalid', 3, 'logs/critical.log');
+       $out['error'] = 'Error ' . $eid;
        $out['status'] = -3;
      }
      
      if(!isset($d['layout']))
      {
        $out['status'] = -1;
-       $out['error'] = 'Layout not set!';
+       $eid = uniqid();
+       error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Layout not set!', 3, 'logs/critical.log');
+       $out['error'] = 'Error ' . $eid;
      } else {
        $_SESSION['currentpage'] = new Page;
        $_SESSION['currentpage']->created = date('Y-m-d H:i:s');
@@ -68,11 +71,12 @@
              $sanitized_site_element->bg_image = base64_encode($site_element['bg_image']);
            }
          } catch(Exception $e) {
-           error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' Could not sanitize layout data: ' . $e->getMessage(), 3, 'logs/critical.log');
+           $eid = uniqid();
+           error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not sanitize layout data: ' . $e->getMessage(), 3, 'logs/critical.log');
            // delete the current configuration to prevent stacking up of the attack
            $_SESSION['currentpage'] = null;
            unset($_SESSION['currentpage']);
-           $out['error'] = 'Error!';
+           $out['error'] = 'Error ' . $eid;
            $out['status'] = -4;
          }
          
@@ -81,7 +85,9 @@
        $out['status'] = 1;
      }
    } catch(Exception $e) {
-     error_log(date('Y-m-d H:i:s') . ' ' . __FILE__ . ' ' . $e->getMessage(), 3, 'logs/critical.log');
+     $eid = uniqid();
+     error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' ' . $e->getMessage(), 3, 'logs/critical.log');
+     $out['error'] = 'Error ' . $eid;
      $out['status'] = -2;
    } 
    header('Content-Type: application/json');

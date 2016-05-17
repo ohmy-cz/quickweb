@@ -9,34 +9,35 @@
   if(isset($_GET['fbid']))
   {
     $fbid = sanitize($_GET['fbid']);
-    $sql = 'select id, name from users where facebook_id="' . $fbid . '"';
+    $sql = 'select id, name from users where facebook_id="' . $fbid . '" limit 1';
     $db = new Database();
     if($user = $db->query($sql)->fetch_object())
     {
       // if a User exists already, log them in
-//      print_r($user);
-//      die();
       $_SESSION['user'] = $user;
     } else {
       // create a user which does not exist.
-      // todo: secure this!
-      $sql = 'insert into users (facebook_id, name, email, created) values ("' . $fbid . '", "' . urldecode($_GET['name']) . '", "' . urldecode($_GET['email']) . '", "'. date('Y-m-d H:i:s').'")';
+      $sql = 'insert into users (facebook_id, name, email, created) values ("' . $fbid . '", "' . sanitize(urldecode($_GET['name']), true, true, true, true) . '", "' . sanitize(urldecode($_GET['email']), false, true) . '", "'. date('Y-m-d H:i:s').'")';
       if($db->query($sql))
       {
         // Now the user has been created, so we can fetch him as an object and proceed.
-        $sql = 'select id, name from users where facebook_id="' . $fbid . '"';
+        $sql = 'select id, name from users where facebook_id="' . $fbid . '" limit 1';
         $user = $db->query($sql)->fetch_object();
         $_SESSION['user'] = $user;
       } else {
-        die('Could not create a new user!');
+        $eid = uniqid();
+        error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not create a new user', 3, 'logs/critical.log');
+        die('Error ' . $eid);
       }
     }
-    // redirect tt the next step.
-    header('Location: pagemeta.php');
+    // redirect to the next step.
+    if(isset($_GET['gotoaccount']))
+    {
+      header('Location: account.php');
+    } else {
+      header('Location: pagemeta.php');
+    }
   }
-  echo '<!--';
-  print_r($_SESSION['currentpage']);
-  echo '-->';
 ?>
 <!doctype html>
 <html>

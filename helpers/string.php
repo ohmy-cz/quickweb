@@ -40,6 +40,7 @@
      array_push($allowed, ')');
      array_push($allowed, '[');
      array_push($allowed, ']');
+     array_push($allowed, '@');
    }
    if($allowMath)
    {
