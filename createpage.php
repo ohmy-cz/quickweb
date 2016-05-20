@@ -5,11 +5,17 @@
    
    session_start();
    $out['status'] = 0;
+   
    try {
      require_once('classes/page.php');
      require_once('classes/site_element.php');
      require_once('helpers/string.php');
      require_once('classes/form_security.php');
+     require_once('htmlpurifier/HTMLPurifier.auto.php');
+    
+     $config = HTMLPurifier_Config::createDefault();
+     $config->set('HTML.Allowed', 'p[style],b,a[href|style],i[style],img[src|align|width|height|alt],span[style]');
+     $purifier = new HTMLPurifier($config);
      $formSecurity = new formSecurity();
      
      $d = json_decode(file_get_contents('php://input'), true);
@@ -56,7 +62,8 @@
            {
              $sanitized_site_element->id = intval($site_element['id']);
            }
-           $sanitized_site_element->content = base64_encode($site_element['content']);
+           
+           $sanitized_site_element->content = base64_encode($purifier->purify($site_element['content']));
            $sanitized_site_element->size_y = intval($site_element['size_y']);
            $sanitized_site_element->size_x = intval($site_element['size_x']);
            $sanitized_site_element->type = intval($site_element['type']);
