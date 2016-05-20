@@ -58,6 +58,8 @@
       <button onclick="login()" type="button" class="btn btn-primary btn-block" id="btnLogin" >Login</button>
 
       <div id="status"></div>
+      <br><br><br><br>
+      <a href="doc/web_application_security_policy.pdf">Security policy</a>
     </div>
     <script src="js/common.js"></script>
     <script src="js/login.js"></script>

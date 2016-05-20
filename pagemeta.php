@@ -310,6 +310,8 @@
         </div>
         <button type="submit" class="btn btn-primary btn-block" id="btnLogin">Save page</button>
       </form>
+      <br><br><br><br>
+      <a href="doc/web_application_security_policy.pdf">Security policy</a>
     </div>
     <script src="js/common.js"></script>
     <script src="js/pagemeta.js"></script>

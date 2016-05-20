@@ -797,6 +797,8 @@
       ?>
       <hr>
       <a class="btn btn-default btn-block" href="login.php?gotoaccount"><i class="fa fa-folder-open"></i> Open existing page</a>
+      <br><br><br><br>
+      <a href="doc/web_application_security_policy.pdf">Security policy</a>
     </div>
   </div>
 <!--<div id="summernote">Hello Summernote</div>-->
