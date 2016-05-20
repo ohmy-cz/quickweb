@@ -7,6 +7,7 @@
    $out['status'] = 0;
    
    try {
+     require('classes/error.php');
      require_once('classes/page.php');
      require_once('classes/site_element.php');
      require_once('helpers/string.php');
