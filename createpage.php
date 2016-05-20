@@ -8,6 +8,7 @@
    
    try {
      require('classes/error.php');
+     $e = new Error();
      require_once('classes/page.php');
      require_once('classes/site_element.php');
      require_once('helpers/string.php');

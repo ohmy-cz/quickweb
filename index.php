@@ -10,7 +10,8 @@
   touch('logs/critical.log');
   
   require('classes/error.php');
-  Error::log(1, "Visit: " . $_SERVER['REMOTE_ADDR'], __FILE__, __LINE__);
+  $e = new Error();
+  $e->log(1, "Visit: " . $_SERVER['REMOTE_ADDR'], __FILE__, __LINE__);
   require_once('helpers/string.php');
   require_once('classes/form_security.php');
   require_once('classes/database.php');
