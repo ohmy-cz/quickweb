@@ -16,7 +16,7 @@
      require_once('htmlpurifier/HTMLPurifier.auto.php');
     
      $config = HTMLPurifier_Config::createDefault();
-     $config->set('HTML.Allowed', 'p[style],b,a[href|style],i[style],img[src|align|width|height|alt],span[style]');
+     $config->set('HTML.Allowed', 'div[class|style],form,input[type|class|required|value|placeholder],p[style|class],b,a[href|style|class],i[style|class],img[src|align|width|height|alt|class],span[style|class]');
      $purifier = new HTMLPurifier($config);
      $formSecurity = new formSecurity();
      
@@ -64,8 +64,7 @@
            {
              $sanitized_site_element->id = intval($site_element['id']);
            }
-           
-           $sanitized_site_element->content = base64_encode($purifier->purify($site_element['content']));
+           $sanitized_site_element->content = base64_encode(rawurlencode($purifier->purify(urldecode($site_element['content']))));
            $sanitized_site_element->size_y = intval($site_element['size_y']);
            $sanitized_site_element->size_x = intval($site_element['size_x']);
            $sanitized_site_element->type = intval($site_element['type']);

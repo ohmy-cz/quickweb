@@ -45,6 +45,7 @@ $(function () {
                     // If there's any saved HTML, let's replace the default empty content.
                     if(node.content)
                     {
+                      console.log(decodeURIComponent(node.content));
                       var newItem = $(decodeURIComponent(node.content));
                       // we need to remove an invisible resizing div, added by jQuery UI that's being captured when an element is saved. 
                       // if we don't do this, this element will effectively exist twice and that causes the resize button to stop working.
@@ -59,7 +60,8 @@ $(function () {
                     
                     // Enable the tint button in restored items
                     nodeHtml.find('.avi-tint').colorpicker();
-                    
+                    console.log(nodeHtml,
+                        node.coordinate_x, node.coordinate_y, node.size_x, node.size_y);
                     this.grid.addWidget(nodeHtml,
                         node.coordinate_x, node.coordinate_y, node.size_x, node.size_y);
                 }, this);
@@ -150,7 +152,34 @@ $(function () {
               target = $('body');
             }
             target.css('background-image', 'url(\'' + e.target.result + '\')');
-            $(document).trigger('avi:activateSaveBtn');
+            
+            
+            $.ajax({
+              url: 'saveimg.php',
+              cache: false,
+              type: 'POST',
+              dataType: 'json',
+              contentType:"application/json; encoding=utf8",
+              data: JSON.stringify({
+                binary: e.target.result,
+                securitytoken: $('#securitytoken').val()
+              }),
+              success: function(r) {
+                if(parseInt(r.status) > 0)
+                {
+                  target.css('background-image', 'url(\'images/' + r.filename + '\')');
+                  $(document).trigger('avi:activateSaveBtn');
+                } else {
+                  alert(r.error);
+                }
+              },
+              error: function(a,b,c) {
+                console.error(a,b,c);
+              },
+              complete: function() {
+                o.removeClass('disabled').removeAttr('disabled');
+              }
+            });
           };
         })(f);
       console.log('c2');

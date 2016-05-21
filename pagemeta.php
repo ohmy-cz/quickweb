@@ -226,7 +226,7 @@
                 try{
                   ?>
                     <div class="col-sm-<?php echo intval($site_element->size_x); ?>" style="left:<?php echo intval($site_element->coordinate_x) * $cellWidth; ?>%;top:<?php echo intval($site_element->coordinate_y) * $cellHeight; ?>px;height:<?php echo intval($site_element->size_y) * $cellHeight; ?>px;">
-                      <?php echo urldecode(base64_decode($site_element->content)); ?>
+                      <?php echo strtr(urldecode(base64_decode($site_element->content)), array('images/' => '../../images/', '&quot;' => '\'')); ?>
                     </div>
                   <?php
                 } catch(Exception $e) {
