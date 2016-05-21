@@ -8808,19 +8808,21 @@ body {
   top: 0px;
   right: 15px;
   left: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
   bottom: 0px;
   background-size: cover;
 }
 
 @media screen and (max-width: 767px) {
-  /* line 26, ../../sass/static.scss */
+  /* line 28, ../../sass/static.scss */
   .avi-container > div {
     left: 0px !important;
     top: auto !important;
     position: relative !important;
   }
 }
-/* line 33, ../../sass/static.scss */
+/* line 35, ../../sass/static.scss */
 .avi-contentPadding > .avi-contentContainer {
   padding: 10px;
 }
