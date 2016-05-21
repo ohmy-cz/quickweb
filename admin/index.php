@@ -20,7 +20,11 @@
   $formSecurity = new formSecurity();
   
   $sql = 'select * from user_roles';
-  $user_roles = $db->query($sql)->fetch_all(MYSQLI_ASSOC);
+  $user_roles = array();
+  $result = $db->query($sql);
+  while ($row = $result->fetch_assoc()) {
+    array_push($user_roles, $row);
+  }
 ?><!doctype html>
 <html>
 <head>
