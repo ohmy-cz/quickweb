@@ -10,10 +10,15 @@
   if(isset($_GET['fbid']))
   {
     $fbid = sanitize($_GET['fbid']);
-    $sql = 'select id, name, role_id from users where facebook_id="' . $fbid . '" limit 1';
+    $sql = 'select id, deleted, name, role_id from users where facebook_id="' . $fbid . '" limit 1';
     $db = new Database();
     if($user = $db->query($sql)->fetch_object())
     {
+      // Check that the user has not been deleted
+      if($user->deleted)
+      {
+        die('Your account has been deleted.');
+      }
       // if a User exists already, log them in
       $_SESSION['user'] = $user;
       if(intval($user->role_id) == 3)
