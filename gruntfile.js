@@ -65,6 +65,7 @@ module.exports = function(grunt) {
             'dev/js/editor.js'
           ],
           'js/login.js': 'dev/js/login.js',
+          'admin/js/admin.js': 'dev/js/admin.js',
           'js/pagemeta.js': 'dev/js/pagemeta.js'
         }
       }

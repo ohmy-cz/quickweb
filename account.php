@@ -1,7 +1,5 @@
 <?php
   session_start();
-  // todo: facebook login here
-  // https://developers.facebook.com/docs/facebook-login/web
   
   require('config.php');
   require_once('helpers/string.php');
