@@ -154,6 +154,7 @@
         $r = $db->query($sql);
         if($r)
         {
+          $newSiteId = $db->dbo->insert_id;
           // save the elements!
           foreach($currentPage->layout as $site_element)
           {
@@ -169,7 +170,7 @@
               bg_color,
               content
             ) values (
-              ' . intval($db->dbo->insert_id). ', 
+              ' . intval($newSiteId). ', 
               ' . intval($site_element->type) . ', 
               "' . intval($site_element->coordinate_x) . '", 
               "' . intval($site_element->coordinate_y) . '", 
