@@ -246,7 +246,7 @@
         if(!mkdir($dir))
         {
           $eid = uniqid();
-          error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not create a folder!', 3, 'logs/critical.log');
+          error_log(date('Y-m-d H:i:s') . ' ' . $eid .' ' . __FILE__ . ' Could not create a folder!' . $dir, 3, 'logs/critical.log');
           die('Error ' . $eid);
         }
       }
