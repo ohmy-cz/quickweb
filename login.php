@@ -43,7 +43,7 @@
       }
     }
     // redirect to the next step.
-    if(isset($_SESSION['user']) && isset($_GET['gotoaccount']))
+    if(isset($_SESSION['user']) && !empty($_SESSION['user']) && isset($_GET['gotoaccount']))
     {
       header('Location: account.php');
     } else {

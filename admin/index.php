@@ -135,6 +135,10 @@
                     {
                       ?><i>Deleted</i><?php
                     } else {
+                      if($platformUser->role_id != 3)
+                      {
+                        ?><a class="btn btn-default" href="makeadmin.php?id=<?php echo $platformUser->id; ?>"><i class="fa fa-user-md"></i> Make admin</a><?php
+                      }
                       ?><a class="btn btn-default deleteuser" data-id="<?php echo $platformUser->id; ?>"><i class="fa fa-trash"></i> Delete</a><?php
                     }
                   ?>
@@ -142,8 +146,6 @@
               </tr>
             <?php
           }
-          
-          
         ?>
       </tbody>
     </table>
