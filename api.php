@@ -29,7 +29,7 @@
       // json encode on the server won't accept direct mysql result array object.
       array_push($users, array(
         'id' => $row['id'],
-        'name' => $row['name'],
+        'name' => sanitize($row['name'], true, true, true, true),
         'facebook_id' => $row['facebook_id'],
         'role_id' => $row['role_id'],
         'created' => $row['created']
